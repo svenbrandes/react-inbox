@@ -73,46 +73,46 @@ class App extends Component {
 
     toggleValue = (val, id) => {
         const indexOfMessage = this.state.messages.findIndex(message => message.id == id);
-        const updatedMessages = [...this.state.messages];
-        updatedMessages[indexOfMessage][val] = !updatedMessages[indexOfMessage][val];
-        this.setState({messages: updatedMessages});
+        const messages = [...this.state.messages];
+        messages[indexOfMessage][val] = !messages[indexOfMessage][val];
+        this.setState({messages: messages});
     }
 
     toggleSelectAll = () => {
-        let messages = [...this.state.messages];
+        const messages = [...this.state.messages];
         messages.filter(msg => msg.selected).length === messages.length ?
             messages.forEach(msg => msg.selected = false) :
             messages.forEach(msg => msg.selected = true);
         this.setState({messages: messages});
     }
 
-    markAsRead = (isChecked) => {
-        let selectedMessages = [...this.state.messages];
-        selectedMessages.forEach(message => {
+    markAsRead = (isRead) => {
+        const messages = [...this.state.messages];
+        messages.forEach(message => {
             if(message.selected) {
-                message.read = isChecked;
+                message.read = isRead;
             }
         })
-        this.setState({messages: selectedMessages});
+        this.setState({messages: messages});
     }
 
-    countUnreadMessages = () => this.state.messages.reduce((acc, cur) => acc + (cur.read === true ? 0 : 1), 0);
+    countUnreadMessages = () => this.state.messages.filter(message => !message.read).length;
+
 
     deleteSelectedMessages = () => {
-        const updatedMessages = [...this.state.messages.filter(message => !message.selected)];
-        this.setState({messages: updatedMessages});
+        this.setState({messages: [...this.state.messages.filter(message => !message.selected)]});
     }
 
     updateLabel = (val, isAdded) => {
-        const updatedMessages = [...this.state.messages];
-        updatedMessages.forEach(message => {
+        const messages = [...this.state.messages];
+        messages.forEach(message => {
             if(message.selected && isAdded && !message.labels.includes(val)) {
                 message.labels = [...message.labels, val];
             } else if (message.selected && !isAdded && message.labels.includes(val)) {
                 message.labels = message.labels.filter(label => label !== val);
             }
         })
-        this.setState({messages: updatedMessages});
+        this.setState({messages: messages});
     }
 
     selectedMsgState = () => {
