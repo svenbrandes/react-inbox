@@ -30,7 +30,8 @@ class App extends Component {
             body: JSON.stringify({
                 "messageIds": msgIdAsArray,
                 "command": command,
-                [command==="addLabel"||"removeLabel"?"label":command]: val
+                [command===("addLabel"||"removeLabel")?"label":
+                    command]: val
             })
         });
     }

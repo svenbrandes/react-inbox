@@ -14,7 +14,6 @@ class ComposeForm extends Component {
     onSubmit = e => {
         e.preventDefault();
         this.props.sendMsg(this.state);
-        this.setState({subject:"", body:""});
     }
 
     render() {

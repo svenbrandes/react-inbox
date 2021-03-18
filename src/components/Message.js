@@ -18,6 +18,8 @@ const Message = ({id, subject, read, starred, selected, labels, toggleValue}) =>
                 </a>
             </div>
         </div>
+
+
     )
 }
 
