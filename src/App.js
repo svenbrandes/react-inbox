@@ -55,6 +55,15 @@ class App extends Component {
 
     getSelectedMsgIds = () => [...this.state.messages.filter(msg => msg.selected)].reduce((acc, cur) => acc.concat(cur.id), []);
 
+    toggleComposeMode = () => this.setState({composing: !this.state.composing});
+
+    countUnreadMessages = () => this.state.messages.filter(message => !message.read).length;
+
+    markAsRead = (isRead) => this.updateMails(this.getSelectedMsgIds(), "read", isRead);
+
+    deleteSelectedMessages = () => this.updateMails(this.getSelectedMsgIds(), "delete");
+
+    updateLabel = (val, isAdded) => this.updateMails(this.getSelectedMsgIds(), isAdded?"addLabel":"removeLabel", val);
 
     toggleValue = (val, id) => {
         if(val==="starred") this.updateMails([id], "star");
@@ -71,17 +80,6 @@ class App extends Component {
             messages.forEach(msg => msg.selected = true);
         this.setState({messages: messages});
     }
-
-    toggleComposeMode = () => this.setState({composing: !this.state.composing});
-
-    markAsRead = (isRead) => this.updateMails(this.getSelectedMsgIds(), "read", isRead);
-
-    countUnreadMessages = () => this.state.messages.filter(message => !message.read).length;
-
-    deleteSelectedMessages = () => this.updateMails(this.getSelectedMsgIds(), "delete");
-
-    updateLabel = (val, isAdded) => this.updateMails(this.getSelectedMsgIds(), isAdded?"addLabel":"removeLabel", val);
-
 
     selectedMsgState = () => {
         const countOfSelectedMessages = this.state.messages.filter(message => message.selected).length;
