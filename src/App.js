@@ -21,7 +21,7 @@ class App extends Component {
     }
 
     updateMails = async (msgIdAsArray, command, val) => {
-        fetch('http://localhost:8082/api/messages', {
+        const response = await fetch('http://localhost:8082/api/messages', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,10 +30,11 @@ class App extends Component {
             body: JSON.stringify({
                 "messageIds": msgIdAsArray,
                 "command": command,
-                [command===("addLabel"||"removeLabel")?"label":
-                    command]: val
+                [command===("addLabel"||"removeLabel")?"label":command]: val
             })
         });
+        const messages = await response.json();
+        this.setState({messages: messages});
     }
 
     sendMail = async (msgToSend) => {
@@ -74,13 +75,6 @@ class App extends Component {
     markAsRead = (isRead) => {
         const selectedMsgIds = [...this.state.messages.filter(msg => msg.selected)].reduce((acc, cur) => acc.concat(cur.id), []);
         this.updateMails(selectedMsgIds, "read", isRead);
-        const messages = [...this.state.messages];
-        messages.forEach(message => {
-            if(message.selected) {
-                message.read = isRead;
-            }
-        })
-        this.setState({messages: messages});
     }
 
     countUnreadMessages = () => this.state.messages.filter(message => !message.read).length;
@@ -89,7 +83,6 @@ class App extends Component {
     deleteSelectedMessages = () => {
         const selectedMsgIds = [...this.state.messages.filter(msg => msg.selected)].reduce((acc, cur) => acc.concat(cur.id), []);
         this.updateMails(selectedMsgIds, "delete");
-        this.setState({messages: [...this.state.messages.filter(message => !message.selected)]});
     }
 
     updateLabel = (val, isAdded) => {
