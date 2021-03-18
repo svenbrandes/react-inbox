@@ -30,7 +30,7 @@ class App extends Component {
             body: JSON.stringify({
                 "messageIds": msgIdAsArray,
                 "command": command,
-                [command===("addLabel"||"removeLabel")?"label":command]: val
+                [command==="removeLabel"||command==="addLabel"?"label":command]: val
             })
         });
         const messages = await response.json();
@@ -53,13 +53,18 @@ class App extends Component {
         this.setState({composing: false, messages: [...this.state.messages, message]});
     }
 
+    getSelectedMsgIds = () => [...this.state.messages.filter(msg => msg.selected)].reduce((acc, cur) => acc.concat(cur.id), []);
+
 
     toggleValue = (val, id) => {
-        if(val==="starred") this.updateMails([id], "star");
-        const indexOfMessage = this.state.messages.findIndex(message => message.id == id);
-        const messages = [...this.state.messages];
-        messages[indexOfMessage][val] = !messages[indexOfMessage][val];
-        this.setState({messages: messages});
+        if(val==="starred") {
+            this.updateMails([id], "star");
+        } else if(val=="selected") {
+            const indexOfMessage = this.state.messages.findIndex(message => message.id == id);
+            const messages = [...this.state.messages];
+            messages[indexOfMessage][val] = !messages[indexOfMessage][val];
+            this.setState({messages: messages});
+        }
     }
 
     toggleSelectAll = () => {
@@ -72,32 +77,14 @@ class App extends Component {
 
     toggleComposeMode = () => this.setState({composing: !this.state.composing});
 
-    markAsRead = (isRead) => {
-        const selectedMsgIds = [...this.state.messages.filter(msg => msg.selected)].reduce((acc, cur) => acc.concat(cur.id), []);
-        this.updateMails(selectedMsgIds, "read", isRead);
-    }
+    markAsRead = (isRead) => this.updateMails(this.getSelectedMsgIds(), "read", isRead);
 
     countUnreadMessages = () => this.state.messages.filter(message => !message.read).length;
 
+    deleteSelectedMessages = () => this.updateMails(this.getSelectedMsgIds(), "delete");
 
-    deleteSelectedMessages = () => {
-        const selectedMsgIds = [...this.state.messages.filter(msg => msg.selected)].reduce((acc, cur) => acc.concat(cur.id), []);
-        this.updateMails(selectedMsgIds, "delete");
-    }
+    updateLabel = (val, isAdded) => this.updateMails(this.getSelectedMsgIds(), isAdded?"addLabel":"removeLabel", val);
 
-    updateLabel = (val, isAdded) => {
-        const messages = [...this.state.messages];
-        messages.forEach(message => {
-            if(message.selected && isAdded && !message.labels.includes(val)) {
-                this.updateMails([message.id], "addLabel", val);
-                message.labels = [...message.labels, val];
-            } else if (message.selected && !isAdded && message.labels.includes(val)) {
-                this.updateMails([message.id], "removeLabel", val);
-                message.labels = message.labels.filter(label => label !== val);
-            }
-        })
-        this.setState({messages: messages});
-    }
 
     selectedMsgState = () => {
         const countOfSelectedMessages = this.state.messages.filter(message => message.selected).length;
