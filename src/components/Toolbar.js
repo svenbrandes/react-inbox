@@ -1,4 +1,4 @@
-const Toolbar = ({toggleSelectAll, markAsRead, unreadMsgCount, deleteMsg, updateLabel, selectedMsgState}) => {
+const Toolbar = ({composeMsg, toggleSelectAll, markAsRead, unreadMsgCount, deleteMsg, updateLabel, selectedMsgState}) => {
 
     return (
         <div className="row toolbar">
@@ -7,6 +7,10 @@ const Toolbar = ({toggleSelectAll, markAsRead, unreadMsgCount, deleteMsg, update
                     <span className="badge badge">{unreadMsgCount}</span>
                     unread messages
                 </p>
+
+                <a className="btn btn-danger" onClick={composeMsg}>
+                    <i className="fa fa-plus"></i>
+                </a>
 
                 <button className="btn btn-default" onClick={toggleSelectAll}>
                     <i className={`fa fa-${selectedMsgState === "none" ? "" : selectedMsgState === "all" ? "check-" : "minus-"}square-o`}></i>
