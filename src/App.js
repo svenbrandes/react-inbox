@@ -35,7 +35,7 @@ class App extends Component {
         });
     }
 
-    sendMail = async (subject, body) => {
+    sendMail = async (msgToSend) => {
         const response = await fetch('http://localhost:8082/api/messages', {
             method: 'POST',
             headers: {
@@ -43,8 +43,8 @@ class App extends Component {
                 'Accept': 'application/json',
             },
             body: JSON.stringify({
-                "subject": subject,
-                "body": body
+                "subject": msgToSend.subject,
+                "body": msgToSend.body
             })
         });
         const message = await response.json();
