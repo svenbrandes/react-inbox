@@ -4,7 +4,7 @@ const Message = ({id, subject, read, starred, selected, labels, toggleValue}) =>
             <div className="col-xs-1">
                 <div className="row">
                     <div className="col-xs-2">
-                        <input type="checkbox" checked={selected?"checked":""} onClick={() => toggleValue("selected", id)}/>
+                        <input type="checkbox" checked={selected?"checked":""} onChange={() => toggleValue("selected", id)}/>
                     </div>
                     <div className="col-xs-2">
                         <i className={`star fa fa-star${starred?"":"-o"}`} onClick={() => toggleValue("starred", id)}></i>
@@ -18,8 +18,6 @@ const Message = ({id, subject, read, starred, selected, labels, toggleValue}) =>
                 </a>
             </div>
         </div>
-
-
     )
 }
 

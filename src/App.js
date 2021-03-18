@@ -34,7 +34,7 @@ class App extends Component {
             })
         });
         const messages = await response.json();
-        this.setState({messages: messages});
+        if(command!=="star") this.setState({messages: messages});
     }
 
     sendMail = async (msgToSend) => {
@@ -57,14 +57,11 @@ class App extends Component {
 
 
     toggleValue = (val, id) => {
-        if(val==="starred") {
-            this.updateMails([id], "star");
-        } else if(val=="selected") {
-            const indexOfMessage = this.state.messages.findIndex(message => message.id == id);
-            const messages = [...this.state.messages];
-            messages[indexOfMessage][val] = !messages[indexOfMessage][val];
-            this.setState({messages: messages});
-        }
+        if(val==="starred") this.updateMails([id], "star");
+        const indexOfMessage = this.state.messages.findIndex(message => message.id === id);
+        const messages = [...this.state.messages];
+        messages[indexOfMessage][val] = !messages[indexOfMessage][val];
+        this.setState({messages: messages});
     }
 
     toggleSelectAll = () => {
